@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1086326881454",
+    "project_id": "movie-swipe-9cc14",
+    "storage_bucket": "movie-swipe-9cc14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086326881454:android:7a477841e0902795b4c13f",
+        "android_client_info": {
+          "package_name": "com.example.movie_swipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086326881454-r5hbps662q2de9ops1j86n8dkhsjt0f2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtcl0F63L0_k-37l2SVRux0Gir1exJYG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1086326881454-r5hbps662q2de9ops1j86n8dkhsjt0f2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
