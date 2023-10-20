@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_swipe/models/movie.api.dart';
 import 'package:movie_swipe/screens/friends_page.dart';
+import 'package:movie_swipe/screens/friends_page.dart';
 import 'package:movie_swipe/widgets/swipe_card.dart';
 import 'package:provider/provider.dart';
 

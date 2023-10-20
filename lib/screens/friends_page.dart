@@ -17,40 +17,46 @@ class FriendsPage extends StatefulWidget {
   _FriendsPageState createState() => _FriendsPageState();
 }
 
-/*
-void startDBUpdates() {
-  var currentUser = FirebaseAuth.instance.currentUser!;
-  final docRef = FirebaseFirestore.instance
-      .collection('users')
-      .doc("vL916qiuCwVESMJRtg5REeD9Zhb2");
-
-  docRef.snapshots().listen(
-        (event) => print("current data: ${event.data()}"),
-        onError: (error) => print("Listen failed: $error"),
-      );
-}
-
-
-*/
-
 class _FriendsPageState extends State<FriendsPage> {
   var currentUser = FirebaseAuth.instance.currentUser!;
-
+  bool isLoading = true;
   Map<String, dynamic>? userData;
+  int? userDataLength;
+  Future<List<dynamic>>? friends;
+
   final docRef = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid.toString());
 
+  /*
   Future getSnapshots() async {
     docRef.snapshots().listen(
       (event) {
         print("current data: ${event.data()}");
         //userData = event.data();
-        userData = event.data()! as Map<String, dynamic>;
+        userData = event.data() as Map<String, dynamic>;
+        userDataLength = userData!['friends'].length ?? 0;
         print(userData!['friends']);
       },
       onError: (error) => print("Listen failed: $error"),
     );
+    setState(() {
+      isLoading = false;
+    });
+  }
+  */
+
+  Future getFriends() async {
+    DocumentSnapshot userDoc = await docRef.get();
+    userData = userDoc.data() as Map<String, dynamic>;
+    //friends = userData!['friends'];
+
+    print("These are the friends: $friends");
+    //setState(() {
+    //  isLoading = false;
+    //});
+    //Return the value at the end of the method hopefully as a future
+    return userDoc;
   }
 
   final _friendController = TextEditingController();
@@ -68,6 +74,7 @@ class _FriendsPageState extends State<FriendsPage> {
   void initState() {
     //getSnapshots();
     super.initState();
+    //getFriends();
   }
 
   @override
@@ -98,7 +105,7 @@ class _FriendsPageState extends State<FriendsPage> {
               ),
               child: Center(
                 child: Text(
-                  'Add Friend',
+                  'Add Friend2',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -108,58 +115,35 @@ class _FriendsPageState extends State<FriendsPage> {
               ),
             ),
           ),
-          /*StreamBuilder<QuerySnapshot>(
-            stream: _friendsStream,
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return const Text("Something is wrong");
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text("Loading");
-              }
-
-              //if (snapshot.hasData) {
-              //  return Text("Document is empty");
-              //}
-
-              return ListView(
-                children: snapshot.data!.docs
-                    .map((DocumentSnapshot document) {
-                      Map<String, dynamic> data =
-                          document.data()! as Map<String, dynamic>;
-                      return ListTile(
-                        title: Text(userData!['friends'].toString()),
-                      );
-                    })
-                    .toList()
-                    .cast(),
-              );
-            },
-          )*/
           Expanded(
               child: FutureBuilder(
-            future: getSnapshots(),
+            future: getFriends(),
             builder: (context, snapshot) {
-              return ListView.builder(
-                itemCount: userData!['friends'].length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MatchedPage(
-                                friendEmail: userData!['friends'][index])),
-                      );
-                    },
-                    child: ListTile(
-                      title: Text(userData!['friends'][index]),
-                    ),
-                  );
-                },
-              );
+              if (snapshot.hasData) {
+                print("This is the snapshot: ");
+                print(snapshot.data);
+                return ListView.builder(
+                  itemCount: userData!['friends'].length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MatchedPage(
+                                  friendEmail: userData!['friends'][index])),
+                        );
+                      },
+                      child: ListTile(
+                        title: Text(userData!['friends'][index]),
+                      ),
+                    );
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
             },
           )),
         ],
